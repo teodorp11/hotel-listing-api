@@ -1,6 +1,42 @@
-@HotelListing.API_HostAddress = http://localhost:5261
+@HotelListing.API_HostAddress = https://localhost:7146
 
-GET {{HotelListing.API_HostAddress}}/weatherforecast/
-Accept: application/json
+
+
+@id=1
+GET {{HotelListing.API_HostAddress}}/api/hotels/{{id}}
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/hotels
+
+###
+
+
+@id=1
+DELETE {{HotelListing.API_HostAddress}}/api/hotels/{{id}}
+
+###
+
+POST {{HotelListing.API_HostAddress}}/api/hotels
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Hotel B",
+  "address": "Street S2",
+  "rating": 2
+}
+
+###
+
+@id=2
+PUT {{HotelListing.API_HostAddress}}/api/hotels/{{id}}
+Content-Type: application/json
+
+{
+  "name": "Hotel A",
+  "address": "Street S1",
+  "rating": 1
+}
 
 ###
