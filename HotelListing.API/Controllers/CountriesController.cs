@@ -18,7 +18,9 @@ public class CountriesController(HotelListingDbContext context) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
     {
-        var countries = await context.Countries.ToListAsync();
+        var countries = await context.Countries
+            // .Include(c => c.Hotels) // Eager loading the Hotels navigation property
+            .ToListAsync();
 
         return countries;
     }
@@ -27,14 +29,19 @@ public class CountriesController(HotelListingDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Country>> GetCountry(int id)
     {
-        var country = await context.Countries.FindAsync(id);
-
-        if (country == null)
+        // Check if the ID exists in the DB first (for debugging)
+        var exists = await context.Countries.AnyAsync(q => q.Id == id);
+        if (!exists)
         {
-            return NotFound();
+            // If this hits, ID 11 is definitely not in the database table
+            return NotFound($"Country with ID {id} does not exist in the database.");
         }
 
-        return country;
+        var country = await context.Countries
+            .Include(c => c.Hotels)
+            .FirstOrDefaultAsync(q => q.Id == id);
+
+        return Ok(country);
     }
 
     // PUT: api/Countries/5

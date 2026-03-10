@@ -9,25 +9,68 @@ POST {{HotelListing.API_HostAddress}}/api/countries
 Content-Type: application/json
 
 {
-  //Country
+  "Name": "Test Country",
+  "ShortName": "T.C."
 }
 
 ###
 
-@id=8
 DELETE {{HotelListing.API_HostAddress}}/api/countries/{{id}}
 
 ###
 
-GET {{HotelListing.API_HostAddress}}/api/countries/{{id}}
+@countryId=15
+GET {{HotelListing.API_HostAddress}}/api/countries/{{countryId}}
 
 ###
 
-PUT {{HotelListing.API_HostAddress}}/api/countries/{{id}}
+@countryId=15
+PUT {{HotelListing.API_HostAddress}}/api/countries/{{countryId}}
 Content-Type: application/json
 
 {
-  //Country
+  "Id": 15,
+  "Name": "Great Britain",
+  "ShortName": "GB"
+}
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/hotels
+
+###
+
+POST {{HotelListing.API_HostAddress}}/api/hotels
+Content-Type: application/json
+
+{
+  "Name": "Test Hotel",
+  "Address": "St. 123",
+  "Rating": 5,
+  "CountryId": 15
+}
+
+###
+
+DELETE {{HotelListing.API_HostAddress}}/api/hotels/{{id}}
+
+###
+
+@hotelId=6
+GET {{HotelListing.API_HostAddress}}/api/hotels/{{hotelId}}
+
+###
+
+@hotelId=6
+PUT {{HotelListing.API_HostAddress}}/api/hotels/{{hotelId}}
+Content-Type: application/json
+
+{
+  "Id": 6,
+  "Name": "Hotel F",
+  "Address": "St. 105",
+  "Rating": 5,
+  "CountryId": 15
 }
 
 ###
