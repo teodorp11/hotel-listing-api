@@ -1,11 +1,13 @@
-﻿namespace HotelListing.API.Data
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HotelListing.API.Data
 {
     public class Hotel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set;  }
-        public double Rating { set; get; }
+        public required string Name { get; set; }
+        public required string Address { get; set;  }
+        public double Rating { get; set; }
 
         // Foreign Key for Country
         public int CountryId { get; set; }
