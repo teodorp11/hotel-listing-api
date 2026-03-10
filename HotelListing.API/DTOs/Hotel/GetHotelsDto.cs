@@ -7,3 +7,10 @@ public record GetHotelsDto(
     double Rating,
     int CountryId
 );
+
+public record GetHotelSlimDto(
+    int Id,
+    string Name,
+    string Address,
+    double Rating
+);

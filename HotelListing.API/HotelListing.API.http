@@ -61,13 +61,13 @@ GET {{HotelListing.API_HostAddress}}/api/hotels/{{hotelId}}
 
 ###
 
-@hotelId=6
+@hotelId=5
 PUT {{HotelListing.API_HostAddress}}/api/hotels/{{hotelId}}
 Content-Type: application/json
 
 {
-  "Id": 6,
-  "Name": "Hotel F",
+  "Id": 5,
+  "Name": "Hotel E",
   "Address": "St. 105",
   "Rating": 5,
   "CountryId": 15
