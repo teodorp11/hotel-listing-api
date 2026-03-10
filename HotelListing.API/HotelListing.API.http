@@ -40,3 +40,39 @@ Content-Type: application/json
 }
 
 ###
+
+GET {{HotelListing.API_HostAddress}}/api/countries
+
+###
+
+POST {{HotelListing.API_HostAddress}}/api/countries
+Content-Type: application/json
+
+{
+  "name": "Test Country",
+  "shortName": "TC"
+}
+
+###
+
+@id=5
+DELETE {{HotelListing.API_HostAddress}}/api/countries/{{id}}
+
+###
+
+@id=4
+GET {{HotelListing.API_HostAddress}}/api/countries/{{id}}
+
+###
+
+@id=7
+PUT {{HotelListing.API_HostAddress}}/api/countries/{{id}}
+Content-Type: application/json
+
+{
+  "id": 6,
+  "name": "Romania",
+  "shortName": "ROU"
+}
+
+###
