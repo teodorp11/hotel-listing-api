@@ -1,5 +1,4 @@
-﻿using HotelListing.API.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HotelListing.API.DTOs.Hotel;
 
