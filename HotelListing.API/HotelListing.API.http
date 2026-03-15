@@ -9,29 +9,30 @@ POST {{HotelListing.API_HostAddress}}/api/countries
 Content-Type: application/json
 
 {
-  "Name": "Test Country",
-  "ShortName": "T.C."
+  "Name": "Russia",
+  "ShortName": "RUS"
 }
 
 ###
 
-DELETE {{HotelListing.API_HostAddress}}/api/countries/{{id}}
+@deleteCountryId=11
+DELETE {{HotelListing.API_HostAddress}}/api/countries/{{deleteCountryId}}
 
 ###
 
-@countryId=15
-GET {{HotelListing.API_HostAddress}}/api/countries/{{countryId}}
+@getCountryId=20
+GET {{HotelListing.API_HostAddress}}/api/countries/{{getCountryId}}
 
 ###
 
-@countryId=15
-PUT {{HotelListing.API_HostAddress}}/api/countries/{{countryId}}
+@updateCountryId=20
+PUT {{HotelListing.API_HostAddress}}/api/countries/{{updateCountryId}}
 Content-Type: application/json
 
 {
-  "Id": 15,
-  "Name": "Great Britain",
-  "ShortName": "GB"
+  "Id": 20,
+  "Name": "Ukraine",
+  "ShortName": "UKR"
 }
 
 ###
@@ -44,33 +45,34 @@ POST {{HotelListing.API_HostAddress}}/api/hotels
 Content-Type: application/json
 
 {
-  "Name": "Test Hotel",
-  "Address": "St. 123",
-  "Rating": 5,
-  "CountryId": 15
+  "Name": "Hotel Stalinskaya",
+  "Address": "St. 003",
+  "Rating": 1,
+  "CountryId": 20
 }
 
 ###
 
-DELETE {{HotelListing.API_HostAddress}}/api/hotels/{{id}}
+@deleteHotelId=9
+DELETE {{HotelListing.API_HostAddress}}/api/hotels/{{deleteHotelId}}
 
 ###
 
-@hotelId=6
-GET {{HotelListing.API_HostAddress}}/api/hotels/{{hotelId}}
+@getHotelId=9
+GET {{HotelListing.API_HostAddress}}/api/hotels/{{getHotelId}}
 
 ###
 
-@hotelId=5
-PUT {{HotelListing.API_HostAddress}}/api/hotels/{{hotelId}}
+@updateHotelId=9
+PUT {{HotelListing.API_HostAddress}}/api/hotels/{{updateHotelId}}
 Content-Type: application/json
 
 {
-  "Id": 5,
-  "Name": "Hotel E",
-  "Address": "St. 105",
-  "Rating": 5,
-  "CountryId": 15
+  "id": 9,
+  "name": "Hotel Stalinskaya",
+  "address": "St. 67",
+  "rating": 5,
+  "countryId": 20
 }
 
 ###
