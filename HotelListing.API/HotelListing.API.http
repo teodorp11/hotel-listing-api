@@ -1,5 +1,5 @@
 @HotelListing.API_HostAddress = https://localhost:7146
-
+@json = application/json
 
 GET {{HotelListing.API_HostAddress}}/api/countries
 
@@ -76,3 +76,11 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{HotelListing.Api_HostAddress}}/api/auth/register
+Content-Type: {{json}}
+
+{
+  "email": "user@localhost.com",
+  "password": "P@ssword1"
+}

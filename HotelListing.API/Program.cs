@@ -27,15 +27,18 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<HotelMappingProfile>();
 });
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => { })
-    .AddRoles<IdentityRole>()
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<HotelListingDbContext>();
+
+builder.Services.AddAuthorization();
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.MapGroup("api/auth").MapIdentityApi<ApplicationUser>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
