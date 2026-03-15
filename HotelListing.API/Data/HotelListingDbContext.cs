@@ -1,15 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace HotelListing.API.Data
+namespace HotelListing.API.Data;
+
+public class HotelListingDbContext : IdentityDbContext<ApplicationUser>
 {
-    public class HotelListingDbContext : DbContext
+    public HotelListingDbContext(DbContextOptions<HotelListingDbContext> options) : base(options)
     {
-        public HotelListingDbContext(DbContextOptions<HotelListingDbContext> options) : base(options)
-        {
-            
-        }
-
-        public DbSet<Hotel> Hotels { get; set; }
-        public DbSet<Country> Countries { get; set; }
+        
     }
+
+    public DbSet<Hotel> Hotels { get; set; }
+    public DbSet<Country> Countries { get; set; }
 }

@@ -2,6 +2,7 @@ using HotelListing.API.Contracts;
 using HotelListing.API.Data;
 using HotelListing.API.MappingProfiles;
 using HotelListing.API.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,10 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<CountryMappingProfile>();
     config.AddProfile<HotelMappingProfile>();
 });
+
+builder.Services.AddIdentityCore<ApplicationUser>(options => { })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<HotelListingDbContext>();
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
