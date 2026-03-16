@@ -1,8 +1,11 @@
+using HotelListing.Api.Constants;
+using HotelListing.Api.Handlers;
+using HotelListing.Api.Services;
 using HotelListing.API.Contracts;
 using HotelListing.API.Data;
 using HotelListing.API.MappingProfiles;
 using HotelListing.API.Services;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +23,8 @@ builder.Services.AddControllers()
 
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<IHotelsService, HotelsService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IApiKeyValidatorService, ApiKeyValidatorService>();
 
 builder.Services.AddAutoMapper(config =>
 {
@@ -30,6 +35,14 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<HotelListingDbContext>();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = AuthenticationDefaults.ApiKeyScheme;
+    options.DefaultChallengeScheme = AuthenticationDefaults.ApiKeyScheme;
+})
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>(AuthenticationDefaults.BasicScheme, _ => { })
+    .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(AuthenticationDefaults.ApiKeyScheme, _ => { });
+
 builder.Services.AddAuthorization();
 
 
@@ -38,7 +51,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.MapGroup("api/auth").MapIdentityApi<ApplicationUser>();
+app.MapGroup("api/defaultauth").MapIdentityApi<ApplicationUser>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

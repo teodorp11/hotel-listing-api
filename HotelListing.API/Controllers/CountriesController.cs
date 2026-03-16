@@ -1,6 +1,7 @@
 ﻿using HotelListing.API.Contracts;
 using HotelListing.API.Controllers;
 using HotelListing.API.DTOs.Country;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.Api.Controllers;
@@ -11,6 +12,7 @@ public class CountriesController(ICountriesService countriesService) : BaseApiCo
 {
     // GET: api/Countries
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<GetCountriesDto>>> GetCountries()
     {
         var result = await countriesService.GetCountriesAsync();
