@@ -9,7 +9,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDUwMDFmN
 
 POST {{HotelListing.API_HostAddress}}/api/countries
 Authorization: Bearer eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDUwMDFmNy1kYzZkLTQ5ZTMtYmQyMy00ZTc3YmY3MWJkODciLCJlbWFpbCI6InVzZXI2N0Bsb2NhbGhvc3QuY29tIiwianRpIjoiMjk4N2FhM2YtYjE1NS00ODBlLWE4ZTAtYjU0NTNlYTZmNDYyIiwibmFtZSI6IkRvZSwgSm9obiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NzM5MTQwODIsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.6SisYLSMfXQV5j9H5APdeW4Q3dZEQp1Ba_rPGsJppMc
-Content-Type: application/json
+Content-Type: {{@json}}
 
 {
   "Name": "Spain",
@@ -33,7 +33,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDUwMDFmN
 @updateCountryId=13
 PUT {{HotelListing.API_HostAddress}}/api/countries/{{updateCountryId}}
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDUwMDFmNy1kYzZkLTQ5ZTMtYmQyMy00ZTc3YmY3MWJkODciLCJlbWFpbCI6InVzZXI2N0Bsb2NhbGhvc3QuY29tIiwianRpIjoiMjk4N2FhM2YtYjE1NS00ODBlLWE4ZTAtYjU0NTNlYTZmNDYyIiwibmFtZSI6IkRvZSwgSm9obiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NzM5MTQwODIsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.6SisYLSMfXQV5j9H5APdeW4Q3dZEQp1Ba_rPGsJppMc
-Content-Type: application/json
+Content-Type: {{@json}}
 
 {
   "Id": 13,
@@ -48,7 +48,7 @@ GET {{HotelListing.API_HostAddress}}/api/hotels
 ###
 
 POST {{HotelListing.API_HostAddress}}/api/hotels
-Content-Type: application/json
+Content-Type: {{@json}}
 
 {
   "Name": "Hotel Stalinskaya",
@@ -71,7 +71,7 @@ GET {{HotelListing.API_HostAddress}}/api/hotels/{{getHotelId}}
 
 @updateHotelId=9
 PUT {{HotelListing.API_HostAddress}}/api/hotels/{{updateHotelId}}
-Content-Type: application/json
+Content-Type: {{@json}}
 
 {
   "id": 9,
@@ -113,5 +113,15 @@ Content-Type: {{json}}
   "email": "user8@localhost.com",
   "password": "P@ssword1"
 }
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/apikey
+X-Api-Key: {{@apiKey}}
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/basicauth
+Authorization: Basic dXNlcjZAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
 
 ###

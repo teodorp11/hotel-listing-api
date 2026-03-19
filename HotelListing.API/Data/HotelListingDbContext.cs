@@ -14,7 +14,6 @@ public class HotelListingDbContext(DbContextOptions<HotelListingDbContext> optio
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        // This stops the "PendingModelChangesWarning" from crashing your Update-Database command
         optionsBuilder.ConfigureWarnings(w =>
             w.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
@@ -22,11 +21,6 @@ public class HotelListingDbContext(DbContextOptions<HotelListingDbContext> optio
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<ApiKey>(b =>
-        {
-            b.HasIndex(k => k.Key).IsUnique();
-        });
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
