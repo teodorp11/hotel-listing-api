@@ -2,7 +2,7 @@
 using HotelListing.API.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelListing.Api.Services;
+namespace HotelListing.API.Services;
 
 // Validate API keys against the database
 public class ApiKeyValidatorService(HotelListingDbContext db) : IApiKeyValidatorService

@@ -1,5 +1,4 @@
-﻿using HotelListing.Api.DTOs.Auth;
-using HotelListing.API.DTOs.Auth;
+﻿using HotelListing.API.DTOs.Auth;
 using HotelListing.API.Results;
 
 namespace HotelListing.API.Contracts;

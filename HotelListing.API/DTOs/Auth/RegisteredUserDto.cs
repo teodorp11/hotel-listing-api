@@ -1,4 +1,4 @@
-﻿namespace HotelListing.Api.DTOs.Auth;
+﻿namespace HotelListing.API.DTOs.Auth;
 
 public class RegisteredUserDto
 {

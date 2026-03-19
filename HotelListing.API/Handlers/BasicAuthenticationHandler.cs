@@ -1,12 +1,12 @@
-﻿using HotelListing.Api.DTOs.Auth;
-using HotelListing.API.Contracts;
+﻿using HotelListing.API.Contracts;
+using HotelListing.API.DTOs.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 
-namespace HotelListing.Api.Handlers;
+namespace HotelListing.API.Handlers;
 
 public class BasicAuthenticationHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,

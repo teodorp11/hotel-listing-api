@@ -1,11 +1,11 @@
-﻿using HotelListing.Api.Constants;
+﻿using HotelListing.API.Constants;
 using HotelListing.API.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace HotelListing.Api.Handlers;
+namespace HotelListing.API.Handlers;
 
 public class ApiKeyAuthenticationHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,

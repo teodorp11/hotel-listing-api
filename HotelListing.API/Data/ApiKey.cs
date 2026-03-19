@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelListing.Api.Data;
+namespace HotelListing.API.Data;
 
 public class ApiKey
 {

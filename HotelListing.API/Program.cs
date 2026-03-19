@@ -1,12 +1,12 @@
-using HotelListing.Api.Constants;
-using HotelListing.Api.Handlers;
-using HotelListing.Api.Services;
+using HotelListing.API.Constants;
+using HotelListing.API.Handlers;
+using HotelListing.API.Services;
 using HotelListing.API.Contracts;
 using HotelListing.API.Data;
 using HotelListing.API.MappingProfiles;
-using HotelListing.API.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -36,6 +36,7 @@ builder.Services.AddAutoMapper(config =>
 });
 
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<HotelListingDbContext>();
 
 builder.Services.AddAuthentication(options =>
