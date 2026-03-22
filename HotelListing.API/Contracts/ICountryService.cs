@@ -3,7 +3,7 @@ using HotelListing.API.Results;
 
 namespace HotelListing.API.Contracts;
 
-public interface ICountriesService
+public interface ICountryService
 {
     Task<bool> CountryExistsAsync(int id);
     Task<bool> CountryExistsAsync(string name);

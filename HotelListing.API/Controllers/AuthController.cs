@@ -8,7 +8,7 @@ namespace HotelListing.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [AllowAnonymous]
-public class AuthController(IUsersService usersService) : BaseApiController
+public class AuthController(IUserService usersService) : BaseApiController
 {
     [HttpPost("register")]
     public async Task<ActionResult<RegisteredUserDto>> Register(RegisterUserDto registerUserDto)

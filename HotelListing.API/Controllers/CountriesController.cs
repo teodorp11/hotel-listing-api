@@ -9,7 +9,7 @@ namespace HotelListing.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class CountriesController(ICountriesService countriesService) : BaseApiController
+public class CountriesController(ICountryService countriesService) : BaseApiController
 {
     // GET: api/Countries
     [HttpGet]

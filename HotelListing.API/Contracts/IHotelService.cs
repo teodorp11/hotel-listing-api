@@ -3,7 +3,7 @@ using HotelListing.API.Results;
 
 namespace HotelListing.API.Contracts;
 
-public interface IHotelsService
+public interface IHotelService
 {
     Task<Result<GetHotelDto>> CreateHotelAsync(CreateHotelDto hotelDto);
     Task<Result> DeleteHotelAsync(int id);

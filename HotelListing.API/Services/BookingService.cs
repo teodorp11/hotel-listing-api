@@ -12,7 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace HotelListing.API.Services;
 
-public class BookingService(HotelListingDbContext context, IHttpContextAccessor httpContextAccessor, IMapper mapper) : IBookingService
+public class BookingService(HotelListingDbContext context, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService) : IBookingService
 {
     public async Task<Result<IEnumerable<GetBookingDto>>> GetBookingsForHotelAsync(int hotelId)
     {
@@ -33,10 +33,7 @@ public class BookingService(HotelListingDbContext context, IHttpContextAccessor 
 
     public async Task<Result<GetBookingDto>> CreateBookingAsync(CreateBookingDto createDto)
     {
-        var userId = httpContextAccessor?
-            .HttpContext?
-            .User?
-            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userId = userService.UserId;
 
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -111,10 +108,7 @@ public class BookingService(HotelListingDbContext context, IHttpContextAccessor 
 
     public async Task<Result<GetBookingDto>> UpdateBookingAsync(int hotelId, int bookingId, UpdateBookingDto updateDto)
     {
-        var userId = httpContextAccessor?
-            .HttpContext?
-            .User?
-            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userId = userService.UserId;
 
         var overlaps = await context.Bookings.AnyAsync(
             b => b.HotelId == hotelId
@@ -177,10 +171,7 @@ public class BookingService(HotelListingDbContext context, IHttpContextAccessor 
 
     public async Task<Result> CancelBookingAsync(int hotelId, int bookingId)
     {
-        var userId = httpContextAccessor?
-            .HttpContext?
-            .User?
-            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userId = userService.UserId;
 
         var booking = await context.Bookings
             .Include(b => b.Hotel)
@@ -210,10 +201,7 @@ public class BookingService(HotelListingDbContext context, IHttpContextAccessor 
 
     public async Task<Result> AdminCancelBookingAsync(int hotelId, int bookingId)
     {
-        var userId = httpContextAccessor?
-            .HttpContext?
-            .User?
-            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userId = userService.UserId;
 
         var isHotelAdminUser = await context.HotelAdmins
             .AnyAsync(q => q.UserId == userId && q.HotelId == hotelId);
@@ -250,10 +238,7 @@ public class BookingService(HotelListingDbContext context, IHttpContextAccessor 
 
     public async Task<Result> AdminConfirmBookingAsync(int hotelId, int bookingId)
     {
-        var userId = httpContextAccessor?
-            .HttpContext?
-            .User?
-            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userId = userService.UserId;
 
         var isHotelAdminUser = await context.HotelAdmins
             .AnyAsync(q => q.UserId == userId && q.HotelId == hotelId);
@@ -286,5 +271,25 @@ public class BookingService(HotelListingDbContext context, IHttpContextAccessor 
         await context.SaveChangesAsync();
 
         return Result.Success();
+    }
+
+    public async Task<Result<IEnumerable<GetBookingDto>>> GetUserBookingsForHotelAsync(int hotelId)
+    {
+        var userId = userService.UserId;
+
+        var hotelExists = await context.Hotels.AnyAsync(h => h.Id == hotelId);
+        
+        if (!hotelExists)
+        {
+            return Result<IEnumerable<GetBookingDto>>.Failure(new Error(ErrorCodes.NotFound, $"Hotel '{hotelId}' was not found."));
+        }
+
+        var bookings = await context.Bookings
+            .Where(b => b.HotelId == hotelId && b.UserId == userId)
+            .OrderBy(b => b.CheckIn)
+            .ProjectTo<GetBookingDto>(mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return Result<IEnumerable<GetBookingDto>>.Success(bookings);
     }
 }

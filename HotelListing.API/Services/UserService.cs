@@ -11,7 +11,8 @@ using System.Text;
 
 namespace HotelListing.API.Services
 {
-    public class UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration) : IUsersService
+    public class UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IHttpContextAccessor
+        httpContextAccessor) : IUserService
     {
         public async Task<Result<RegisteredUserDto>> RegisterAsync(RegisterUserDto registerUserDto)
         {
@@ -67,6 +68,11 @@ namespace HotelListing.API.Services
 
             return Result<string>.Success(token);
         }
+
+        public string UserId => httpContextAccessor?
+            .HttpContext?
+            .User?
+            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value ?? string.Empty;
 
         private async Task<string> GenerateToken(ApplicationUser user)
         {
