@@ -8,16 +8,10 @@ public class HotelMappingProfile : Profile
 {
     public HotelMappingProfile()
     {
-        CreateMap<Hotel, GetHotelsDto>();
-
         CreateMap<Hotel, GetHotelDto>()
-        .ForMember(d => d.Country, config => config.MapFrom<CountryNameResolver>());
-
-        CreateMap<UpdateHotelDto, Hotel>();
-        
-        CreateMap<CreateHotelDto, Hotel>();
-
+            .ForMember(d => d.CountryName, config => config.MapFrom<CountryNameResolver>());
         CreateMap<Hotel, GetHotelSlimDto>();
+        CreateMap<CreateHotelDto, Hotel>();
     }
 }
 

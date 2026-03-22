@@ -72,7 +72,12 @@ namespace HotelListing.API.Services
         public string UserId => httpContextAccessor?
             .HttpContext?
             .User?
-            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value ?? string.Empty;
+            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+            ?? httpContextAccessor?
+            .HttpContext?
+            .User?
+            .FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            ?? string.Empty;
 
         private async Task<string> GenerateToken(ApplicationUser user)
         {

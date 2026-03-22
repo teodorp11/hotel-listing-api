@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +31,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IApiKeyValidatorService, ApiKeyValidatorService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
-builder.Services.AddAutoMapper(config =>
-{
-    config.AddProfile<CountryMappingProfile>();
-    config.AddProfile<HotelMappingProfile>();
-});
+builder.Services.AddAutoMapper(config => { }, Assembly.GetExecutingAssembly());
 
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddRoles<IdentityRole>()
