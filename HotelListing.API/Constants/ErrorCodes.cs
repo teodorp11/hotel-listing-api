@@ -7,5 +7,6 @@
         public const string BadRequest = "BadRequest";
         public const string Conflict = "Conflict";
         public const string Failure = "Failure";
+        public const string Forbid = "Forbid";
     }
 }

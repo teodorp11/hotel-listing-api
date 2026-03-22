@@ -24,10 +24,11 @@ builder.Services.AddControllers()
         opt.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-builder.Services.AddScoped<ICountriesService, CountriesService>();
-builder.Services.AddScoped<IHotelsService, HotelsService>();
-builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<ICountriesService, CountryService>();
+builder.Services.AddScoped<IHotelsService, HotelService>();
+builder.Services.AddScoped<IUsersService, UserService>();
 builder.Services.AddScoped<IApiKeyValidatorService, ApiKeyValidatorService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 builder.Services.AddAutoMapper(config =>
 {
@@ -62,6 +63,7 @@ builder.Services.AddAuthentication(options =>
     .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(AuthenticationDefaults.ApiKeyScheme, _ => { });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

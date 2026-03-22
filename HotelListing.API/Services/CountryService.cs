@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.API.Services;
 
-public class CountriesService(HotelListingDbContext context, IMapper mapper) : ICountriesService
+public class CountryService(HotelListingDbContext context, IMapper mapper) : ICountriesService
 {
     public async Task<Result<IEnumerable<GetCountriesDto>>> GetCountriesAsync()
     {
