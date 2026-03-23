@@ -1,9 +1,8 @@
-using HotelListing.API.Constants;
+using HotelListing.API.Common.Constants;
 using HotelListing.API.Handlers;
 using HotelListing.API.Services;
 using HotelListing.API.Contracts;
-using HotelListing.API.Data;
-using HotelListing.API.MappingProfiles;
+using HotelListing.API.Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
+using HotelListing.API.Common.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +37,15 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<HotelListingDbContext>();
 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>() ?? new JwtSettings();
+
+if (string.IsNullOrWhiteSpace(jwtSettings.Key))
+{
+    throw new InvalidOperationException("JwtSettings: Key is not configured.");
+}
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -51,9 +60,9 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty)),
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
         ClockSkew = TimeSpan.Zero // Default is 5 minutes
     };
 })

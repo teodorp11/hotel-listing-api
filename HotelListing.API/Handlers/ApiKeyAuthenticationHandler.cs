@@ -1,4 +1,4 @@
-﻿using HotelListing.API.Constants;
+﻿using HotelListing.API.Common.Constants;
 using HotelListing.API.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;

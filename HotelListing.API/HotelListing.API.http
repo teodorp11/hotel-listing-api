@@ -2,9 +2,9 @@
 @json = application/json
 # @host = https://localhost:7124
 @hotelId = 5
-@bookingId = 9
+@bookingId = 17
 @today = {{$localDatetime iso8601}}
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1Mjg0NTY5Yy03NGJkLTQ0NjktOTA2NS1kMjY5MzY3Y2Y3ZjciLCJlbWFpbCI6ImhvdGVsYWRtaW4zQGxvY2FsaG9zdC5jb20iLCJqdGkiOiJmNjk1N2ZjZi0yNjA1LTQ5YjctOTI5My05Y2I4N2Q1NjhiNjUiLCJuYW1lIjoiRG9lLCBKb2hubnkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIb3RlbCBBZG1pbiIsImV4cCI6MTc3NDI4NzIxNCwiaXNzIjoiSG90ZWxMaXN0aW5nQVBJIiwiYXVkIjoiSG90ZWxMaXN0aW5nQVBJQ2xpZW50In0.NMtLwo2ju6x3ppxUz13pIpMt6dcNEl53DhZq-RzgHc8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjAzNzk2MS00OWY5LTQ5ZmEtYmQ3ZC1hNmJhNDY4OTEzNTkiLCJlbWFpbCI6InVzZXIxMTFAbG9jYWxob3N0LmNvbSIsImp0aSI6ImFmYjA1NWU4LWNlNTEtNGZlZi05NjRiLWVlNzJiN2M1Mzk0OSIsIm5hbWUiOiJEb2UsIEpvaG5ueSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NzQzMDI3MDcsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.e8GpXR3c2XiBGcJbdkGFTsl2-xs69G_EpsUwBjZwpV4
 @apiKey=dXNlcjZAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
 
 GET {{HotelListing.API_HostAddress}}/api/countries
@@ -14,36 +14,36 @@ Authorization: Bearer {{token}}
 
 POST {{HotelListing.API_HostAddress}}/api/countries
 Authorization: Bearer {{token}}
-Content-Type: {{@json}}
+Content-Type: {{json}}
 
 {
-  "Name": "Spain",
-  "ShortName": "ESP"
+  "Name": "Portugal",
+  "ShortName": "POR"
 }
 
 ###
 
-@deleteCountryId=21
+@deleteCountryId=23
 DELETE {{HotelListing.API_HostAddress}}/api/countries/{{deleteCountryId}}
 Authorization: Bearer {{token}}
 
 ###
 
-@getCountryId=13
+@getCountryId=14
 GET {{HotelListing.API_HostAddress}}/api/countries/{{getCountryId}}
 Authorization: Bearer {{token}}
 
 ###
 
-@updateCountryId=13
+@updateCountryId=14
 PUT {{HotelListing.API_HostAddress}}/api/countries/{{updateCountryId}}
 Authorization: Bearer {{token}}
-Content-Type: {{@json}}
+Content-Type: {{json}}
 
 {
-  "Id": 13,
-  "Name": "Italy",
-  "ShortName": "IT"
+  "Id": 14,
+  "Name": "Netherlands",
+  "ShortName": "NET"
 }
 
 ###
@@ -53,13 +53,14 @@ Authorization: Bearer {{token}}
 ###
 
 POST {{HotelListing.API_HostAddress}}/api/hotels
-Content-Type: {{@json}}
+Authorization: Basic {{token}}
+Content-Type: {{json}}
 
 {
-  "Name": "Hotel Stalinskaya",
-  "Address": "St. 003",
-  "Rating": 1,
-  "CountryId": 20
+  "Name": "Hotel Westchester",
+  "Address": "Victory Avenue",
+  "Rating": 5,
+  "CountryId": 15
 }
 
 ###
@@ -94,11 +95,11 @@ POST {{HotelListing.Api_HostAddress}}/api/auth/register
 Content-Type: {{json}}
 
 {
-  "email": "hoteladmin1@localhost.com",
+  "email": "admin2@localhost.com",
   "password": "P@ssword1",
   "firstName": "Johnny",
   "lastName": "Doe",
-  "role": "Hotel Admin"
+  "role": "Administrator"
 }
 
 ###
@@ -106,7 +107,7 @@ Content-Type: {{json}}
 POST {{HotelListing.Api_HostAddress}}/api/auth/login
 Content-Type: {{json}}
 {
-  "email": "admin1@localhost.com",
+  "email": "admin2@localhost.com",
   "password": "P@ssword1"
 }
 
@@ -140,11 +141,11 @@ POST {{HotelListing.Api_HostAddress}}/api/auth/register
 Content-Type: {{json}}
 
 {
-  "email": "hoteladmin1@localhost.com",
+  "email": "user111@localhost.com",
   "password": "P@ssword1",
   "firstName": "Johnny",
   "lastName": "Doe",
-  "role": "Hotel Admin"
+  "role": "User"
 }
 
 ###
@@ -153,7 +154,7 @@ POST {{HotelListing.Api_HostAddress}}/api/auth/login
 Content-Type: {{json}}
 
 {
-  "email": "hoteladmin1@localhost.com",
+  "email": "user111@localhost.com",
   "password": "P@ssword1"
 }
 
@@ -166,9 +167,9 @@ Content-Type: {{json}}
 
 {
   "hotelId": {{hotelId}},
-  "checkIn": "2026-03-30",
-  "checkOut": "2026-03-31",
-  "guests": 1
+  "checkIn": "2026-03-15",
+  "checkOut": "2026-03-25",
+  "guests": 5
 }
 
 ###
@@ -180,9 +181,9 @@ Content-Type: {{json}}
 
 {
   "hotelId": {{hotelId}},
-  "checkIn": "2026-03-23",
-  "checkOut": "2026-03-28",
-  "guests": 1
+  "checkIn": "2026-04-10",
+  "checkOut": "2026-04-15",
+  "guests": 5
 }
 
 ### 3) CreateBookingDto - Creating an invalid booking
@@ -208,8 +209,8 @@ Content-Type: {{json}}
 
 {
   "hotelId": {{hotelId}},
-  "checkIn": "2026-04-25",
-  "checkOut": "2026-04-28",
+  "checkIn": "2026-03-01",
+  "checkOut": "2026-03-05",
   "guests": 0
 }
 
@@ -237,7 +238,7 @@ Content-Type: {{json}}
 
 {
   "checkIn": "2026-03-20",
-  "checkOut": "2026-03-28",
+  "checkOut": "2026-03-30",
   "guests": 1
 }
 
@@ -249,8 +250,8 @@ Authorization: Bearer {{token}}
 Content-Type: {{json}}
 
 {
-  "checkIn": "2026-03-30",
-  "checkOut": "2026-03-31",
+  "checkIn": "2026-03-21",
+  "checkOut": "2026-03-29",
   "guests": 1
 }
 
@@ -262,8 +263,8 @@ Authorization: Bearer {{token}}
 Content-Type: {{json}}
 
 {
-  "checkIn": "2026-03-30",
-  "checkOut": "2026-03-31",
+  "checkIn": "2026-03-21",
+  "checkOut": "2026-03-29",
   "guests": 5
 }
 
@@ -275,9 +276,9 @@ Authorization: Bearer {{token}}
 Content-Type: {{json}}
 
 {
-  "checkIn": "2026-03-30",
-  "checkOut": "2026-03-31",
-  "guests": 20
+  "checkIn": "2026-03-21",
+  "checkOut": "2026-03-29",
+  "guests": 12
 }
 
 ###

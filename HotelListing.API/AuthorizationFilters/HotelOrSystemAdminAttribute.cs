@@ -1,4 +1,5 @@
-﻿using HotelListing.API.Data;
+﻿using HotelListing.API.Common.Constants;
+using HotelListing.API.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class HotelOrSystemAdminFilter(HotelListingDbContext dbContext) : IAsyncA
         }
 
         // If user is a global Administrator, allow immediately
-        if (httpUser!.IsInRole("Administrator"))
+        if (httpUser!.IsInRole(RoleNames.Administrator))
         {
             return;
         }

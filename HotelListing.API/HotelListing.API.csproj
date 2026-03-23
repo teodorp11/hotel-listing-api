@@ -24,4 +24,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HotelListing.API.Application\HotelListing.API.Application.csproj" />
+    <ProjectReference Include="..\HotelListing.API.Common\HotelListing.API.Common.csproj" />
+    <ProjectReference Include="..\HotelListing.API.Domain\HotelListing.API.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
