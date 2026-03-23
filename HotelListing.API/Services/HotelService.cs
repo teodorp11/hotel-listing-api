@@ -11,13 +11,13 @@ namespace HotelListing.API.Services;
 
 public class HotelService(HotelListingDbContext context, ICountryService countriesService, IMapper mapper) : IHotelService
 {
-    public async Task<Result<IEnumerable<GetHotelsDto>>> GetHotelsAsync()
+    public async Task<Result<IEnumerable<GetHotelDto>>> GetHotelsAsync()
     {
         var hotels = await context.Hotels
-            .ProjectTo<GetHotelsDto>(mapper.ConfigurationProvider)
+            .ProjectTo<GetHotelDto>(mapper.ConfigurationProvider)
             .ToListAsync();
 
-        return Result<IEnumerable<GetHotelsDto>>.Success(hotels);
+        return Result<IEnumerable<GetHotelDto>>.Success(hotels);
     }
 
     public async Task<Result<GetHotelDto>> GetHotelAsync(int id)

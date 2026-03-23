@@ -11,7 +11,7 @@ using System.Text;
 
 namespace HotelListing.API.Services
 {
-    public class UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IHttpContextAccessor
+    public class UserService(UserManager<ApplicationUser> userManager, HotelListingDbContext hotelListingDbContext, IConfiguration configuration, IHttpContextAccessor
         httpContextAccessor) : IUserService
     {
         public async Task<Result<RegisteredUserDto>> RegisterAsync(RegisterUserDto registerUserDto)
@@ -29,10 +29,23 @@ namespace HotelListing.API.Services
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => new Error(ErrorCodes.BadRequest, e.Description)).ToArray();
+                
                 return Result<RegisteredUserDto>.BadRequest(errors);
             }
 
             await userManager.AddToRoleAsync(user, registerUserDto.Role);
+
+            if (registerUserDto.Role == "Hotel Admin")
+            {
+                var hotelAdmin = hotelListingDbContext.HotelAdmins.Add(
+                    new HotelAdmin
+                    {
+                        UserId = user.Id,
+                        HotelId = registerUserDto.AssociatedHotelId.GetValueOrDefault()
+                    });
+
+                await hotelListingDbContext.SaveChangesAsync();
+            }
 
             var registeredUser = new RegisteredUserDto
             {

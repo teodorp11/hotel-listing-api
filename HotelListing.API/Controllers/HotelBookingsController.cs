@@ -29,7 +29,7 @@ public class HotelBookingsController(IBookingService bookingService) : BaseApiCo
         return ToActionResult(result);
     }
 
-    [HttpPost("{bookingId:int}")]
+    [HttpPut("{bookingId:int}")]
     public async Task<ActionResult<GetBookingDto>> UpdateBooking(
     [FromRoute] int hotelId,
     [FromRoute] int bookingId,

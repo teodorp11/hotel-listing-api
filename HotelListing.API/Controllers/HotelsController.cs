@@ -13,7 +13,7 @@ public class HotelsController(IHotelService hotelsService) : BaseApiController
 
     // GET: api/Hotels
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetHotelsDto>>> GetHotels()
+    public async Task<ActionResult<IEnumerable<GetHotelDto>>> GetHotels()
     {
         var result = await hotelsService.GetHotelsAsync();
 
