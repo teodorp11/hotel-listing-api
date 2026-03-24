@@ -57,13 +57,17 @@ public class HotelService(HotelListingDbContext context, ICountryService countri
 
         if (!string.IsNullOrWhiteSpace(hotelFilterParameters.Location))
         {
-            query = query.Where(q => q.Address.Contains(hotelFilterParameters.Location));
+            var location = hotelFilterParameters.Location.Trim();
+
+            query = query.Where(h => EF.Functions.Like(h.Address, $"%{location}%"));
         }
 
         // Generic Search Parameter
         if (!string.IsNullOrWhiteSpace(hotelFilterParameters.Search))
         {
-            query = query.Where(q => q.Name.Contains(hotelFilterParameters.Search) || q.Address.Contains(hotelFilterParameters.Search));
+            var searchedTerm = hotelFilterParameters.Search.Trim();
+            
+            query = query.Where(h => EF.Functions.Like(h.Name, $"%{searchedTerm}%") || EF.Functions.Like(h.Address, $"%{searchedTerm}%"));
         }
 
         query = hotelFilterParameters.SortBy?.ToLower() switch
@@ -119,10 +123,7 @@ public class HotelService(HotelListingDbContext context, ICountryService countri
 
         await context.SaveChangesAsync();
 
-        var dto = await context.Hotels
-            .Where(h => h.Id == hotel.Id)
-            .ProjectTo<GetHotelDto>(mapper.ConfigurationProvider)
-            .FirstAsync();
+        var dto = mapper.Map<GetHotelDto>(hotel);
 
         return Result<GetHotelDto>.Success(dto);
     }
@@ -173,6 +174,8 @@ public class HotelService(HotelListingDbContext context, ICountryService countri
 
     public async Task<bool> HotelExistsAsync(string name, int countryId)
     {
+        var normalizedName = name.ToLower().Trim();
+        
         return await context.Hotels
             .AnyAsync(h => h.Name.ToLower().Trim() == name.ToLower().Trim() && h.CountryId == countryId);
     }

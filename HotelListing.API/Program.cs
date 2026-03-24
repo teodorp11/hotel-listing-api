@@ -17,9 +17,29 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("HotelListingDbConnectionString");
 
-builder.Services.AddDbContext<HotelListingDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContextPool<HotelListingDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.CommandTimeout(30);
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 3,
+            maxRetryDelay: TimeSpan.FromSeconds(5),
+            errorNumbersToAdd: null
+        );
+    });
+
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+}, poolSize: 128);
 
 builder.Services.AddControllers()
+    .AddNewtonsoftJson()
     .AddJsonOptions(opt =>
     {
         opt.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;

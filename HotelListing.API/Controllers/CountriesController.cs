@@ -6,6 +6,7 @@ using HotelListing.API.Controllers;
 using HotelListing.API.DTOs.Country;
 using HotelListing.API.DTOs.Hotel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.Api.Controllers;
@@ -77,6 +78,20 @@ public class CountriesController(ICountryService countriesService) : BaseApiCont
     {
         var result = await countriesService.DeleteCountryAsync(id);
 
+        return ToActionResult(result);
+    }
+
+    [HttpPatch("{id}")]
+    [Authorize(Roles = RoleNames.Administrator)]
+    public async Task<IActionResult> PatchCountry(int id, [FromBody] JsonPatchDocument<UpdateCountryDto> PatchDocument)
+    {
+        if (PatchDocument == null)
+        {
+            return BadRequest("Patch document is required.");
+        }
+
+        var result = await countriesService.PatchCountryAsync(id, PatchDocument);
+        
         return ToActionResult(result);
     }
 }
