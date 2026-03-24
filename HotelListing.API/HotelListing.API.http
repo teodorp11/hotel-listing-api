@@ -4,7 +4,7 @@
 @hotelId = 5
 @bookingId = 17
 @today = {{$localDatetime iso8601}}
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjAzNzk2MS00OWY5LTQ5ZmEtYmQ3ZC1hNmJhNDY4OTEzNTkiLCJlbWFpbCI6InVzZXIxMTFAbG9jYWxob3N0LmNvbSIsImp0aSI6ImFmYjA1NWU4LWNlNTEtNGZlZi05NjRiLWVlNzJiN2M1Mzk0OSIsIm5hbWUiOiJEb2UsIEpvaG5ueSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NzQzMDI3MDcsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.e8GpXR3c2XiBGcJbdkGFTsl2-xs69G_EpsUwBjZwpV4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjAzNzk2MS00OWY5LTQ5ZmEtYmQ3ZC1hNmJhNDY4OTEzNTkiLCJlbWFpbCI6InVzZXIxMTFAbG9jYWxob3N0LmNvbSIsImp0aSI6ImQyMTFjYzU4LWRiNTktNDM5NS1hNzllLWJlMTcyMjFkMzI1MiIsIm5hbWUiOiJEb2UsIEpvaG5ueSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NzQzNjU5NjUsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.DjVFzdmeN1NCKEHJdcCWuEH5UPxYg-iQluJSwpUGwQM
 @apiKey=dXNlcjZAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
 
 GET {{HotelListing.API_HostAddress}}/api/countries
@@ -342,3 +342,37 @@ GET {{HotelListing.API_HostAddress}}/api/hotels/{{hotelId}}/bookings
 Authorization: Bearer {{token}}
 ###
 
+
+#### Pagination Features Testing ####
+
+POST {{HotelListing.Api_HostAddress}}/api/auth/register
+Content-Type: {{json}}
+
+{
+  "email": "user111@localhost.com",
+  "password": "P@ssword1",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "User"
+}
+
+### "associatedHotelId": 5
+
+###
+
+POST {{HotelListing.Api_HostAddress}}/api/auth/login
+Content-Type: {{json}}
+
+{
+  "email": "user111@localhost.com",
+  "password": "P@ssword1"
+}
+
+### Get Country Hotels - Large Page Size
+
+@paginationCountryId=84
+
+GET {{HotelListing.API_HostAddress}}/api/countries/{{paginationCountryId}}/hotels?pageNumber=1&pageSize=5&minRating=4.7&maxRating=4.5
+Authorization: Bearer {{token}}
+
+###

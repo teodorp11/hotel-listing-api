@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HotelListing.API.Common.Models;
+namespace HotelListing.API.Common.Models.Config;
 
 public sealed class JwtSettings
 {

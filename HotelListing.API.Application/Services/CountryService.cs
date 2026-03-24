@@ -1,18 +1,32 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using HotelListing.API.Common.Constants;
+using HotelListing.API.Common.Models.Extensions;
+using HotelListing.API.Common.Models.Filtering;
+using HotelListing.API.Common.Models.Paging;
 using HotelListing.API.Common.Results;
 using HotelListing.API.Contracts;
 using HotelListing.API.Domain;
 using HotelListing.API.DTOs.Country;
+using HotelListing.API.DTOs.Hotel;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.API.Services;
 
 public class CountryService(HotelListingDbContext context, IMapper mapper) : ICountryService
 {
-    public async Task<Result<IEnumerable<GetCountriesDto>>> GetCountriesAsync()
+    public async Task<Result<IEnumerable<GetCountriesDto>>> GetCountriesAsync(CountryFilterParameters countryFilterParameters)
     {
+        var query = context.Countries.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(countryFilterParameters?.Search))
+        {
+            var term = countryFilterParameters.Search.Trim();
+            
+            query = query.Where(q => EF.Functions.Like(q.Name, $"%{term}%")
+            || EF.Functions.Like(q.ShortName, $"%{term}%"));
+        }
+
         var countries = await context.Countries
             .ProjectTo<GetCountriesDto>(mapper.ConfigurationProvider)
             .ToListAsync();
@@ -117,6 +131,50 @@ public class CountryService(HotelListingDbContext context, IMapper mapper) : ICo
             return Result.Failure();
         }
     }
+    public async Task<Result<GetCountryHotelsDto>> GetCountryHotelsAsync(int countryId, PaginationParameters paginationParameters, CountryFilterParameters countryFilterParameters)
+    {
+        var exists = await CountryExistsAsync(countryId);
+
+        if (!exists)
+        {
+            return Result<GetCountryHotelsDto>.Failure(new Error(ErrorCodes.NotFound, $"Country '{countryId}' was not found."));
+        }
+
+        var countryName = await context.Countries
+            .Where(q => q.Id == countryId)
+            .Select(q => q.Name)
+            .SingleAsync();
+
+        var hotelsQuery = context.Hotels
+            .Where(h => h.CountryId == countryId)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(countryFilterParameters.Search))
+        {
+            var term = countryFilterParameters.Search.Trim();
+            hotelsQuery = hotelsQuery.Where(h => EF.Functions.Like(h.Name, $"%{term}%"));
+        }
+
+        hotelsQuery = (countryFilterParameters.SortBy?.Trim().ToLowerInvariant()) switch
+        {
+            "name" => countryFilterParameters.SortDescending ? hotelsQuery.OrderByDescending(h => h.Name) : hotelsQuery.OrderBy(h => h.Name),
+            "rating" => countryFilterParameters.SortDescending ? hotelsQuery.OrderByDescending(h => h.Rating) : hotelsQuery.OrderBy(h => h.Rating),
+            _ => hotelsQuery.OrderBy(h => h.Name)
+        };
+
+        var pagedHotels = await hotelsQuery
+            .ProjectTo<GetHotelSlimDto>(mapper.ConfigurationProvider)
+            .ToPagedResultAsync(paginationParameters);
+
+        var result = new GetCountryHotelsDto
+        {
+            Id = countryId,
+            Name = countryName,
+            Hotels = pagedHotels
+        };
+
+        return Result<GetCountryHotelsDto>.Success(result);
+    }
 
     public async Task<bool> CountryExistsAsync(int id)
     {
@@ -126,5 +184,6 @@ public class CountryService(HotelListingDbContext context, IMapper mapper) : ICo
     {
         return await context.Countries.AnyAsync(c => c.Name.ToLower().Trim() == name.ToLower().Trim());
     }
+
 }
 

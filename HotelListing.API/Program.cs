@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
-using HotelListing.API.Common.Models;
+using HotelListing.API.Common.Models.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 

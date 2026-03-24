@@ -2,6 +2,8 @@
 using HotelListing.API.DTOs.Hotel;
 using HotelListing.API.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using HotelListing.API.Common.Models.Paging;
+using HotelListing.API.Common.Models.Filtering;
 
 namespace HotelListing.API.Controllers;
 
@@ -13,9 +15,9 @@ public class HotelsController(IHotelService hotelsService) : BaseApiController
 
     // GET: api/Hotels
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetHotelDto>>> GetHotels()
+    public async Task<ActionResult<PagedResult<GetHotelDto>>> GetHotels([FromQuery] PaginationParameters paginationParameters, [FromQuery] HotelFilterParameters hotelFilterParameters)
     {
-        var result = await hotelsService.GetHotelsAsync();
+        var result = await hotelsService.GetHotelsAsync(paginationParameters, hotelFilterParameters);
 
         return ToActionResult(result);
     }
