@@ -1,10 +1,11 @@
+
 @HotelListing.API_HostAddress = https://localhost:7146
 @json = application/json
 # @host = https://localhost:7124
 @hotelId = 5
 @bookingId = 17
 @today = {{$localDatetime iso8601}}
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjAzNzk2MS00OWY5LTQ5ZmEtYmQ3ZC1hNmJhNDY4OTEzNTkiLCJlbWFpbCI6InVzZXIxMTFAbG9jYWxob3N0LmNvbSIsImp0aSI6ImQyMTFjYzU4LWRiNTktNDM5NS1hNzllLWJlMTcyMjFkMzI1MiIsIm5hbWUiOiJEb2UsIEpvaG5ueSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NzQzNjU5NjUsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.DjVFzdmeN1NCKEHJdcCWuEH5UPxYg-iQluJSwpUGwQM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjAzNzk2MS00OWY5LTQ5ZmEtYmQ3ZC1hNmJhNDY4OTEzNTkiLCJlbWFpbCI6InVzZXIxMTFAbG9jYWxob3N0LmNvbSIsImp0aSI6Ijc0MDIyNmZjLTc1ZWMtNGFmOC1iYzgxLTMzMzdhOGNkZmJhYiIsIm5hbWUiOiJEb2UsIEpvaG5ueSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3NzQzNzM0NzcsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.wGbTUfFVSNLD65Q2NVRlIC3WlqXidGqhybOMbXtBg_M
 @apiKey=dXNlcjZAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
 
 GET {{HotelListing.API_HostAddress}}/api/countries
@@ -368,11 +369,28 @@ Content-Type: {{json}}
   "password": "P@ssword1"
 }
 
-### Get Country Hotels - Large Page Size
+### GetCountryHotels - Applying Rating and Price Filters
 
 @paginationCountryId=84
 
-GET {{HotelListing.API_HostAddress}}/api/countries/{{paginationCountryId}}/hotels?pageNumber=1&pageSize=5&minRating=4.7&maxRating=4.5
+
+### 1) MinRating greter than MaxRating
+
+GET {{HotelListing.API_HostAddress}}/api/hotels?pageNumber=1&pageSize=100&minRating=5&maxRating=4&minPrice=100&maxPrice=150
+Authorization: Bearer {{token}}
+
+###
+
+### 2) MinPrice greater than MaxPrice
+
+GET {{HotelListing.API_HostAddress}}/api/hotels?pageNumber=1&pageSize=100&minRating=4&maxRating=5&minPrice=150&maxPrice=100
+Authorization: Bearer {{token}}
+
+###
+
+### 3) No validation case
+
+GET {{HotelListing.API_HostAddress}}/api/hotels?pageNumber=1&pageSize=100&minRating=4&maxRating=5&minPrice=100&maxPrice=150
 Authorization: Bearer {{token}}
 
 ###

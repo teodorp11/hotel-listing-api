@@ -134,7 +134,6 @@ public class CountryService(HotelListingDbContext context, IMapper mapper) : ICo
     public async Task<Result<GetCountryHotelsDto>> GetCountryHotelsAsync(int countryId, PaginationParameters paginationParameters, CountryFilterParameters countryFilterParameters)
     {
         var exists = await CountryExistsAsync(countryId);
-
         if (!exists)
         {
             return Result<GetCountryHotelsDto>.Failure(new Error(ErrorCodes.NotFound, $"Country '{countryId}' was not found."));

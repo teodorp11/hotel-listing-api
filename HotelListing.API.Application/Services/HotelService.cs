@@ -16,6 +16,18 @@ public class HotelService(HotelListingDbContext context, ICountryService countri
 {
     public async Task<Result<PagedResult<GetHotelDto>>> GetHotelsAsync(PaginationParameters paginationParameters, HotelFilterParameters hotelFilterParameters)
     {
+        // This was not covered in the course, but it is an important validation statement.
+        if (hotelFilterParameters.MinRating > hotelFilterParameters.MaxRating)
+        {
+            return Result<PagedResult<GetHotelDto>>.Failure(new Error(ErrorCodes.Conflict, $"The Minimum Rating ({hotelFilterParameters.MinRating}) cannot be greater than the Maximum Rating ({hotelFilterParameters.MaxRating})."));
+        }
+
+        // This was not covered in the course, but it is an important validation statement.
+        if (hotelFilterParameters.MinPrice > hotelFilterParameters.MaxPrice)
+        {
+            return Result<PagedResult<GetHotelDto>>.Failure(new Error(ErrorCodes.Conflict, $"The Minimum Price ({hotelFilterParameters.MinPrice}) cannot be greater than the Maximum Price ({hotelFilterParameters.MaxPrice})."));
+        }
+
         var query = context.Hotels.AsQueryable();
 
         if (hotelFilterParameters.CountryId.HasValue)
@@ -23,24 +35,24 @@ public class HotelService(HotelListingDbContext context, ICountryService countri
             query = query.Where(q => q.CountryId == hotelFilterParameters.CountryId);
         }
 
-        if (hotelFilterParameters.MinPrice.HasValue)
-        {
-            query = query.Where(q => q.PerNightRate >= hotelFilterParameters.MinPrice.Value);
-        }
-
-        if (hotelFilterParameters.MaxPrice.HasValue)
-        {
-            query = query.Where(q => q.PerNightRate <= hotelFilterParameters.MaxPrice.Value);
-        }
-
         if (hotelFilterParameters.MinRating.HasValue)
         {
-            query = query.Where(q => q.Rating >= hotelFilterParameters.MinRating.Value);
+            query = query.Where(h => h.Rating >= hotelFilterParameters.MinRating);
         }
 
         if (hotelFilterParameters.MaxRating.HasValue)
         {
-            query = query.Where(q => q.Rating <= hotelFilterParameters.MaxRating.Value);
+            query = query.Where(h => h.Rating <= hotelFilterParameters.MaxRating);
+        }
+
+        if (hotelFilterParameters.MinPrice.HasValue)
+        {
+            query = query.Where(h => h.PerNightRate >= hotelFilterParameters.MinPrice);
+        }
+
+        if (hotelFilterParameters.MaxPrice.HasValue)
+        {
+            query = query.Where(h => h.PerNightRate <= hotelFilterParameters.MaxPrice);
         }
 
         if (!string.IsNullOrWhiteSpace(hotelFilterParameters.Location))
@@ -65,7 +77,8 @@ public class HotelService(HotelListingDbContext context, ICountryService countri
             _ => query.OrderBy(h => h.Name)
         };
 
-        var hotels = await context.Hotels
+        var hotels = await query
+            .Include(q => q.Country)
             .ProjectTo<GetHotelDto>(mapper.ConfigurationProvider)
             .ToPagedResultAsync(paginationParameters);
 
