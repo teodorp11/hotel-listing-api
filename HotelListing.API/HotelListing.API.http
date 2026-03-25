@@ -5,7 +5,7 @@
 @hotelId = 5
 @bookingId = 17
 @today = {{$localDatetime iso8601}}
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTE0OWIzOS05NGEyLTQ0N2UtOTk2OS1iZWZmY2YyMTM3MDAiLCJlbWFpbCI6ImFkbWluMUBsb2NhbGhvc3QuY29tIiwianRpIjoiM2IzMjAxMmQtNjUyNC00YTQ3LWE1ZjItOGYxMmU2YmQwODY5IiwibmFtZSI6IkRvZSwgSm9obiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluaXN0cmF0b3IiLCJleHAiOjE3NzQ0MzEyODEsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.8cFt66lNOYtxy_dlfEwZNklpBF9Y9lGxMQlW7YiTQ0Y
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTE0OWIzOS05NGEyLTQ0N2UtOTk2OS1iZWZmY2YyMTM3MDAiLCJlbWFpbCI6ImFkbWluMUBsb2NhbGhvc3QuY29tIiwianRpIjoiYzY0ZDM4MjctNDA2Yi00MjI0LTkwNjktZTg4NjJiZGRlNTJjIiwibmFtZSI6IkRvZSwgSm9obiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluaXN0cmF0b3IiLCJleHAiOjE3NzQ0NjE1NjIsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.Y7roCqL4Imm-bnINcN4_8D9GfOzEJuiVmDY1Z_RMSVE
 @apiKey=dXNlcjZAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
 
 GET {{HotelListing.API_HostAddress}}/api/countries
@@ -486,7 +486,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-### Searching countries that contain 'United' in their names
+### Searching countries that contain the word 'United' in their names
 GET {{HotelListing.API_HostAddress}}/api/countries?&Search=United&pageNumber=1&pageSize=50
 Authorization: Bearer {{token}}
 

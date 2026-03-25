@@ -5,12 +5,14 @@ using HotelListing.API.Contracts;
 using HotelListing.API.DTOs.Booking;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace HotelListing.API.Controllers;
 
 [Route("api/hotels/{hotelId:int}/bookings")]
 [ApiController]
 [Authorize]
+[EnableRateLimiting("perUser")]
 public class HotelBookingsController(IBookingService bookingService) : BaseApiController
 {
     // "api/hotels/3/bookings"
