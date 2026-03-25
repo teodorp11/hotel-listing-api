@@ -5,7 +5,7 @@
 @hotelId = 5
 @bookingId = 17
 @today = {{$localDatetime iso8601}}
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTE0OWIzOS05NGEyLTQ0N2UtOTk2OS1iZWZmY2YyMTM3MDAiLCJlbWFpbCI6ImFkbWluMUBsb2NhbGhvc3QuY29tIiwianRpIjoiY2E4MDZhMTktMDcwNy00ZmE1LWI1N2ItZWZhMTA1NzkyM2Q4IiwibmFtZSI6IkRvZSwgSm9obiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluaXN0cmF0b3IiLCJleHAiOjE3NzQzODU2MjgsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.MEMRl3TNiZdc1aeDZ_wzhfiyVzCwA9_3i0HJtPOExOk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTE0OWIzOS05NGEyLTQ0N2UtOTk2OS1iZWZmY2YyMTM3MDAiLCJlbWFpbCI6ImFkbWluMUBsb2NhbGhvc3QuY29tIiwianRpIjoiM2IzMjAxMmQtNjUyNC00YTQ3LWE1ZjItOGYxMmU2YmQwODY5IiwibmFtZSI6IkRvZSwgSm9obiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluaXN0cmF0b3IiLCJleHAiOjE3NzQ0MzEyODEsImlzcyI6IkhvdGVsTGlzdGluZ0FQSSIsImF1ZCI6IkhvdGVsTGlzdGluZ0FQSUNsaWVudCJ9.8cFt66lNOYtxy_dlfEwZNklpBF9Y9lGxMQlW7YiTQ0Y
 @apiKey=dXNlcjZAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
 
 GET {{HotelListing.API_HostAddress}}/api/countries
@@ -436,5 +436,58 @@ Content-Type: application/json-patch+json
     "value": "ALG"
   }
 ]
+
+###
+
+
+#### CACHE Memory Testing ####
+
+POST {{HotelListing.Api_HostAddress}}/api/auth/register
+Content-Type: {{json}}
+
+{
+  "email": "admin1@localhost.com",
+  "password": "P@ssword1",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "Administrator"
+}
+
+### "associatedHotelId": 5
+
+###
+
+POST {{HotelListing.Api_HostAddress}}/api/auth/login
+Content-Type: {{json}}
+
+{
+  "email": "admin1@localhost.com",
+  "password": "P@ssword1"
+}
+
+### Create a hotel listing for Romania
+POST {{HotelListing.API_HostAddress}}/api/hotels
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+
+{
+  "Name": "Hotel Transilvania",
+  "Address": "Brasov",
+  "Rating": 5,
+  "CountryId": 142
+}
+
+###
+
+
+### Searching the hotel listing from Romania
+GET {{HotelListing.API_HostAddress}}/api/hotels?&Search=Transilvania&pageNumber=1&pageSize=50
+Authorization: Bearer {{token}}
+
+###
+
+### Searching countries that contain 'United' in their names
+GET {{HotelListing.API_HostAddress}}/api/countries?&Search=United&pageNumber=1&pageSize=50
+Authorization: Bearer {{token}}
 
 ###

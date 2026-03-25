@@ -14,13 +14,6 @@ public class HotelListingDbContext(DbContextOptions<HotelListingDbContext> optio
     public DbSet<HotelAdmin> HotelAdmins { get; set; }
     public DbSet<Booking> Bookings { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.ConfigureWarnings(w =>
-            w.Ignore(RelationalEventId.PendingModelChangesWarning));
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

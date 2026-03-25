@@ -62,7 +62,7 @@ namespace HotelListing.API.Services
             // Optional: Send confirmation Email
             return Result<RegisteredUserDto>.Success(registeredUser);
         }
-
+        
         public async Task<Result<string>> LoginAsync(LoginUserDto dto)
         {
             var user = await userManager.FindByEmailAsync(dto.Email);

@@ -11,37 +11,72 @@ using HotelListing.API.DTOs.Country;
 using HotelListing.API.DTOs.Hotel;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using System.Diagnostics.Metrics;
 
 namespace HotelListing.API.Services;
 
-public class CountryService(HotelListingDbContext context, IMapper mapper) : ICountryService
+public class CountryService(HotelListingDbContext context, IMapper mapper, IMemoryCache cache) : ICountryService
 {
+    private const string CountryCacheName = "country_";
+    private const string CountryListCacheName = "countries_list_";
     public async Task<Result<IEnumerable<GetCountriesDto>>> GetCountriesAsync(CountryFilterParameters countryFilterParameters)
     {
-        var query = context.Countries.AsQueryable();
+        var searchTerm = countryFilterParameters?.Search?.Trim().ToLowerInvariant() ?? string.Empty;
 
-        if (!string.IsNullOrWhiteSpace(countryFilterParameters?.Search))
+        var cacheKey = $"{CountryListCacheName}{searchTerm}";
+
+        if (!cache.TryGetValue(cacheKey, out IEnumerable<GetCountriesDto>? countries))
         {
-            var term = countryFilterParameters.Search.Trim();
+            // Memory Cache implementation
+            var query = context.Countries.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(countryFilterParameters?.Search))
+            {
+                var term = countryFilterParameters.Search.Trim();
             
-            query = query.Where(q => EF.Functions.Like(q.Name, $"%{term}%")
-            || EF.Functions.Like(q.ShortName, $"%{term}%"));
+                query = query.Where(q => EF.Functions.Like(q.Name, $"%{term}%")
+                || EF.Functions.Like(q.ShortName, $"%{term}%"));
+            }
+
+            countries = await query
+                .AsNoTracking()
+                .ProjectTo<GetCountriesDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(1));
+
+            cache.Set(cacheKey, countries, cacheOptions);
         }
 
-        var countries = await query
-            .AsNoTracking()
-            .ProjectTo<GetCountriesDto>(mapper.ConfigurationProvider)
-            .ToListAsync();
+        countries ??= [];
 
         return Result<IEnumerable<GetCountriesDto>>.Success(countries);
     }
     public async Task<Result<GetCountryDto>> GetCountryAsync(int id)
     {
-        var country = await context.Countries
-            .AsNoTracking()
-            .Where(c => c.Id == id)
-            .ProjectTo<GetCountryDto>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+        // Memory Cache implementation
+        var cacheKey = $"{CountryCacheName}{id}";
+
+        if (!cache.TryGetValue(cacheKey, out GetCountryDto? country))
+        {
+            country = await context.Countries
+                .AsNoTracking()
+                .Where(c => c.Id == id)
+                .ProjectTo<GetCountryDto>(mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            if (country is null)
+            {
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(1));
+
+                cache.Set(cacheKey, country, cacheOptions);
+            }
+        }
 
         return country is null
             ? Result<GetCountryDto>.NotFound()
@@ -66,6 +101,8 @@ public class CountryService(HotelListingDbContext context, IMapper mapper) : ICo
             await context.SaveChangesAsync();
 
             var countryDto = mapper.Map<GetCountryDto>(country);
+
+            cache.Remove($"{CountryListCacheName}");
 
             return Result<GetCountryDto>.Success(countryDto);
         }
@@ -104,6 +141,8 @@ public class CountryService(HotelListingDbContext context, IMapper mapper) : ICo
 
             await context.SaveChangesAsync();
 
+            InvalidateCountryCache(id);
+
             return Result.Success();
         }
         catch (Exception)
@@ -126,6 +165,8 @@ public class CountryService(HotelListingDbContext context, IMapper mapper) : ICo
             context.Countries.Remove(country);
 
             await context.SaveChangesAsync();
+
+            InvalidateCountryCache(id);
 
             return Result.Success();
         }
@@ -229,6 +270,11 @@ public class CountryService(HotelListingDbContext context, IMapper mapper) : ICo
         await context.SaveChangesAsync();
 
         return Result.Success();
+    }
+
+    private void InvalidateCountryCache(int id)
+    {
+        cache.Remove($"{CountryCacheName}{id}");
     }
 }
 
