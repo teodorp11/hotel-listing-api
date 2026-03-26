@@ -1,3 +1,4 @@
+using HealthChecks.UI.Client;
 using HotelListing.API.Common.Constants;
 using HotelListing.API.Common.Models.Config;
 using HotelListing.API.Contracts;
@@ -6,9 +7,11 @@ using HotelListing.API.Handlers;
 using HotelListing.API.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
@@ -128,6 +131,25 @@ try
         });
     });
 
+    builder.Services.AddHealthChecks()
+        .AddCheck("self", () => HealthCheckResult.Healthy("Application is running"),
+            tags: ["api"])
+        .AddDbContextCheck<HotelListingDbContext>(
+            name: "database",
+            failureStatus: HealthStatus.Unhealthy,
+            tags: ["db", "sql"]);
+
+    // Not compatible with EF Core 10
+    //builder.Services.AddHealthChecksUI(setup =>
+    //{
+    //    setup.SetEvaluationTimeInSeconds(10);
+    //    setup.MaximumHistoryEntriesPerEndpoint(50);
+    //    setup.AddHealthCheckEndpoint("HotelListing API", "/healthz");
+    //})
+    //.AddInMemoryStorage();
+
+
+
     Log.Information(">>> STAGE 3: Building App");
 
     var app = builder.Build();
@@ -165,13 +187,43 @@ try
     });
 
     app.UseHttpsRedirection();
+
+    app.MapHealthChecks("/healthz", new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
+
+    app.MapHealthChecks("/healthz/live", new HealthCheckOptions
+    {
+        Predicate = _ => false
+    });
+
+    app.MapHealthChecks("/healthz/ready", new HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("db")
+    });
+
+    // Not compatible with EF Core 10
+    //app.MapHealthChecksUI(options =>
+    //{
+    //    options.UIPath = "/healthchecks-ui";
+    //    options.ApiPath = "/healthchecks-api";
+    //});
+
     app.UseRateLimiter();
+    
     app.UseAuthentication();
+    
     app.UseAuthorization();
 
     // Routes
     app.MapGroup("api/defaultauth").MapIdentityApi<ApplicationUser>();
-    if (app.Environment.IsDevelopment()) app.MapOpenApi();
+    
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapOpenApi();
+    }
+    
     app.MapControllers();
 
     Log.Information(">>> STAGE 5: Running App...");
