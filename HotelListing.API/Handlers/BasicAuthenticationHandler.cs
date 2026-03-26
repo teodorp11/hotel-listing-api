@@ -35,6 +35,7 @@ public class BasicAuthenticationHandler(
         try
         {
             var credentialBytes = Convert.FromBase64String(token);
+            
             // {username:password}
             decoded = Encoding.UTF8.GetString(credentialBytes);
         }
@@ -68,6 +69,7 @@ public class BasicAuthenticationHandler(
         {
             new(ClaimTypes.Name, userNameOrEmail),
         };
+
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, Scheme.Name);

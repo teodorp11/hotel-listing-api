@@ -22,6 +22,9 @@ public class CountryService(HotelListingDbContext context, IMapper mapper, IMemo
     private const string CountryListCacheName = "countries_list_";
     public async Task<Result<IEnumerable<GetCountriesDto>>> GetCountriesAsync(CountryFilterParameters countryFilterParameters)
     {
+        // This is only for Global Exception Handling testing
+        // throw new System.Exception("Testing Exception Handling");
+        
         var searchTerm = countryFilterParameters?.Search?.Trim().ToLowerInvariant() ?? string.Empty;
 
         var cacheKey = $"{CountryListCacheName}{searchTerm}";
