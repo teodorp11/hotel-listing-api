@@ -1,4 +1,5 @@
-﻿using HotelListing.API.Common.Constants;
+﻿using Asp.Versioning;
+using HotelListing.API.Common.Constants;
 using HotelListing.API.Common.Models.Filtering;
 using HotelListing.API.Common.Models.Paging;
 using HotelListing.API.Contracts;
@@ -12,10 +13,10 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace HotelListing.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize]
-[EnableRateLimiting("fixed")]
+[ApiVersion("1.0")]
+[EnableRateLimiting(RateLimitingConstants.FixedPolicy)]
 public class CountriesController(ICountryService countriesService) : BaseApiController
 {
     // GET: api/Countries

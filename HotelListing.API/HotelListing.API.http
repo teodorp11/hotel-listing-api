@@ -9,7 +9,7 @@
 @apiKey=dXNlcjZAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
 
 GET {{HotelListing.API_HostAddress}}/api/countries
-Authorization: Bearer {{token}}
+## Authorization: Bearer {{token}}
 ## X-Api-Key: {{apiKey}}
 ###
 
@@ -489,5 +489,20 @@ Authorization: Bearer {{token}}
 ### Searching countries that contain the word 'United' in their names
 GET {{HotelListing.API_HostAddress}}/api/countries?&Search=United&pageNumber=1&pageSize=50
 Authorization: Bearer {{token}}
+
+###
+
+
+#### API Versioning Testing ####
+
+GET {{HotelListing.API_HostAddress}}/api/countries
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/v1/countries
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/v2/countries?pageNumber=1&pageSize=10
 
 ###
