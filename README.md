@@ -37,7 +37,7 @@ The solution follows a clean, modular architecture separated into distinct proje
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/teodorp11/hotel-listing-api.git
 cd HotelListing.API
 ```
 
@@ -73,6 +73,8 @@ Once the application is running in a development environment, navigate to the Sw
 
 - **Swagger UI** - `https://localhost:<port>/swagger`
 - **Health Check Status** - `https://localhost:<port>/healthz`
+
+*Note: Replace `<port>` with the HTTPS port defined in `Properties/launchSettings.json` (under `profiles` -> `https` -> `applicationUrl`).*
 
 ### Authentication in Swagger
 To test secure endpoints using Swagger:
